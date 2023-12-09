@@ -7,11 +7,11 @@ const Feed = () => {
     const username = location.state && location.state.username;
     const [message, setMessage] = useState('');
     const [postText, setPostText] = useState({ post: '' });
+    const [postDataArray, setPostDataArray] = useState([]);
 
     // ------------------------------ TOKEN/LOGIN & LOGOUT ------------------------------ //
 
     useEffect(() => {
-        // Check token status initially
         checkTokenStatus();
 
         // Set up interval to check token status every minute
@@ -71,12 +71,10 @@ const Feed = () => {
                 },
                 body: JSON.stringify({ postText, username }),
             });
+
             if (response.ok) {
                 const responseData = await response.json();
-                setMessage(responseData.message)
-                console.log(responseData);
-
-                // setPostText({ postText: '' })
+                setPostText({ post: '' })
             } else {
                 const errorData = await response.json();
                 console.log('error api response', errorData);
@@ -86,12 +84,43 @@ const Feed = () => {
         }
     };
 
+    useEffect(() => {
+        const fetchPosts = async () => {
+            try {
+                const response = await fetch('http://localhost:3001/api/feedload', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+    
+                if (response.ok) {
+                    const responseData = await response.json();
+                    console.log('Fetched Posts:', responseData.posts);
+                    setPostDataArray(responseData.posts);
+                } else {
+                    console.error('Failed to fetch posts');
+                }
+            } catch (error) {
+                console.error('Error fetching posts:', error);
+            }
+        };
+    
+        fetchPosts();
+    }, []);
+
+    // To be added
+    const handleCommentSubmit = async (e) => {
+
+    }
+
     return (
         <div>
             <button onClick={handleLogout}>Logout</button>
             <h1>Welcome to Social App, {username}</h1>
             {/* Feed content goes here */}
             <form onSubmit={handleSubmit}>
+                {/* TEXTAREA INSTEAD! */}
                 <input 
                     type='text' 
                     name='post' 
@@ -101,6 +130,25 @@ const Feed = () => {
                 />
                 <button type="submit" className="post-button">Create Post</button>
             </form>
+
+            {/* Render new post here */}
+            <div>
+                <h1>Posts:</h1>
+                <div>
+                    {postDataArray.map((post) => (
+                        <div key={post._id}>
+                        <form onSubmit={handleCommentSubmit}>
+                            <input type='textarea' placeholder=''></input>
+                            <button type='submit' className='comment-button'>Send comment</button>
+                        </form>
+                        <strong>Time</strong> {post.timestamp}
+                        <strong>Content:</strong> {post.content}
+                        <button>delete</button>
+                        <button>like</button>
+                        </div>
+                    ))}
+                </div>
+            </div>
         </div>
     );
 };
