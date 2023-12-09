@@ -13,4 +13,7 @@ router.post('/api/login',  authController.login_post);
 // ------------------------------ CREATE POST ------------------------------ //
 router.post('/api/post', postsController.create_post)
 
+// ------------------------------ LOAD POST ------------------------------ //
+router.get('/api/feedload', postsController.load_post)
+
 module.exports = router;
