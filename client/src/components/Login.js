@@ -36,7 +36,7 @@ const Login = () => {
                     username: '',
                     password: '',
                 })
-
+                
                 //Store the token in localStorage or cookies
                 localStorage.setItem('token', responseData.token);
             } else {
