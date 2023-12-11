@@ -10,10 +10,10 @@ router.post('/api/register', authController.register_post);
 // ------------------------------ LOGIN/LOGOUT ------------------------------ //
 router.post('/api/login',  authController.login_post);
 
-// ------------------------------ CREATE POST ------------------------------ //
-router.post('/api/post', postsController.create_post)
-
-// ------------------------------ LOAD POST ------------------------------ //
-router.get('/api/feedload', postsController.load_post)
+// ------------------------------ POSTS ------------------------------ //
+router.post('/api/post', postsController.create_post);
+router.get('/api/feedload', postsController.get_posts);
+router.put('/api/post/:postId', postsController.update_post);
+router.delete('/api/post/:postId', postsController.delete_post);
 
 module.exports = router;
