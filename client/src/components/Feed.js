@@ -13,16 +13,11 @@ const Feed = () => {
 
     useEffect(() => {
         checkTokenStatus();
-
-        // Set up interval to check token status every minute
         const intervalId = setInterval(checkTokenStatus, 60000); // 60000 milliseconds = 1 minute
-
-        // Clean up the interval on component unmount
         return () => clearInterval(intervalId);
     }, [navigate]);
 
     const checkTokenStatus = () => {
-        // Check if there is a token in localStorage
         const storedToken = localStorage.getItem('token');
 
         if (!storedToken || isTokenExpired(storedToken)) {
@@ -37,17 +32,13 @@ const Feed = () => {
             const decodedToken = JSON.parse(atob(token.split('.')[1]));
             return decodedToken.exp < Date.now() / 1000;
         } catch (error) {
-            // Handle invalid or malformed tokens
             console.error('Error decoding token:', error);
             return true;
         }
     };
 
     const handleLogout = () => {
-        // Remove the token from localStorage
         localStorage.removeItem('token');
-
-        // Redirect to the login page after logout
         navigate('/login');
     };
 
@@ -62,57 +53,76 @@ const Feed = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // Send message to the server via API
         try {
             const response = await fetch('http://localhost:3001/api/post', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ postText, username }),
             });
 
             if (response.ok) {
                 const responseData = await response.json();
+                await fetchPosts();
                 setPostText({ post: '' })
             } else {
                 const errorData = await response.json();
-                console.log('error api response', errorData);
             }
         } catch (error) {
             console.error('Error sending data:', error.message);
         }
     };
 
-    useEffect(() => {
-        const fetchPosts = async () => {
-            try {
-                const response = await fetch('http://localhost:3001/api/feedload', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                });
-    
-                if (response.ok) {
-                    const responseData = await response.json();
-                    console.log('Fetched Posts:', responseData.posts);
-                    setPostDataArray(responseData.posts);
-                } else {
-                    console.error('Failed to fetch posts');
-                }
-            } catch (error) {
-                console.error('Error fetching posts:', error);
-            }
-        };
-    
-        fetchPosts();
-    }, []);
-
     // To be added
     const handleCommentSubmit = async (e) => {
-
+        e.preventDefault();
     }
+
+    const handleDelete = async (postId) => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`http://localhost:3001/api/post/${postId}`, {
+              method: 'DELETE',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+              },
+            });
+            if (response.ok) {
+                await fetchPosts();
+            }
+        } catch (error) {
+            console.error('Error deleting post:', error.message);
+        }
+    }
+
+    const fetchPosts = async () => {
+        try {
+            const token = localStorage.getItem('token');
+
+            const response = await fetch('http://localhost:3001/api/feedload', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+            });
+
+            if (response.ok) {
+                const responseData = await response.json();
+                setPostDataArray(responseData.posts);
+            } else {
+                console.error('Failed to fetch posts');
+            }
+        } catch (error) {
+            console.error('Error fetching posts:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchPosts();
+    }, []);
 
     return (
         <div>
@@ -137,13 +147,13 @@ const Feed = () => {
                 <div>
                     {postDataArray.map((post) => (
                         <div key={post._id}>
-                        <form onSubmit={handleCommentSubmit}>
+                            {post.isOwner && <button onClick={() => handleDelete(post._id)}>delete</button>}
+                            <strong>Time</strong> {post.timestamp}
+                            <strong>Content:</strong> {post.content}
+                            <form onSubmit={handleCommentSubmit}>
                             <input type='textarea' placeholder=''></input>
                             <button type='submit' className='comment-button'>Send comment</button>
                         </form>
-                        <strong>Time</strong> {post.timestamp}
-                        <strong>Content:</strong> {post.content}
-                        <button>delete</button>
                         <button>like</button>
                         </div>
                     ))}
