@@ -31,7 +31,7 @@ const Login = () => {
                 const responseData = await response.json();
                 console.log(responseData);
                 setMessage(responseData.message);
-                navigate('/feed', { state: {username: loginData.username}});
+                navigate('/feed', {state: {username: loginData.username}});
                 setLoginData({
                     username: '',
                     password: '',
