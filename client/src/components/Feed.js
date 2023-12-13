@@ -5,6 +5,8 @@ const Feed = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const username = location.state && location.state.username;
+    const [likeCount, setLikeCount] = useState(0);
+    const [likedPosts, setLikedPosts] = useState([]);
     const [message, setMessage] = useState('');
     const [postText, setPostText] = useState({ post: '' });
     const [postDataArray, setPostDataArray] = useState([]);
@@ -20,11 +22,7 @@ const Feed = () => {
     const checkTokenStatus = () => {
         const storedToken = localStorage.getItem('token');
 
-        if (!storedToken || isTokenExpired(storedToken)) {
-            // Redirect to the login page if there is no token or if it's expired
-            console.log('Token not found or expired. Redirecting to /login');
-            navigate('/login');
-        }
+        if (!storedToken || isTokenExpired(storedToken)) navigate('/login'); 
     };
 
     const isTokenExpired = (token) => {
@@ -43,7 +41,6 @@ const Feed = () => {
     };
 
     // ------------------------------ POSTS ------------------------------ //
-    
     const handleChange = (e) => {
         setPostText({
             ...postText,
@@ -54,10 +51,12 @@ const Feed = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
+            const token = localStorage.getItem('token');
             const response = await fetch('http://localhost:3001/api/post', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify({ postText, username }),
             });
@@ -74,11 +73,6 @@ const Feed = () => {
         }
     };
 
-    // To be added
-    const handleCommentSubmit = async (e) => {
-        e.preventDefault();
-    }
-
     const handleDelete = async (postId) => {
         try {
             const token = localStorage.getItem('token');
@@ -89,6 +83,7 @@ const Feed = () => {
                 'Authorization': `Bearer ${token}`
               },
             });
+
             if (response.ok) {
                 await fetchPosts();
             }
@@ -97,10 +92,50 @@ const Feed = () => {
         }
     }
 
+    const handleIncrementLike = (postId) => {
+        setLikedPosts((prevLikedPosts) => [...prevLikedPosts, postId]);
+        console.log(`Post ${postId} liked`);
+    };
+    
+    const handleDecrementLike = (postId) => {
+        setLikedPosts((prevLikedPosts) => prevLikedPosts.filter((id) => id !== postId));
+        console.log(`Post ${postId} unliked`);
+    };
+
+    const handleLikeButton = async (postId) => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`http://localhost:3001/api/post/${postId}/like`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+            });
+
+            if (response.ok) {
+                const responseData = await response.json();
+
+                if (responseData.liked) {
+                    handleIncrementLike(postId);
+                } else {
+                    handleDecrementLike(postId);
+                }
+                console.log('Like updated successfully');
+            }
+        } catch (error) {
+            console.error('Error updating likes:', error.message);
+        }
+    };
+
+    // To be added
+    const handleCommentSubmit = async (e) => {
+        e.preventDefault();
+    }
+
     const fetchPosts = async () => {
         try {
             const token = localStorage.getItem('token');
-
             const response = await fetch('http://localhost:3001/api/feedload', {
                 method: 'GET',
                 headers: {
@@ -148,13 +183,22 @@ const Feed = () => {
                     {postDataArray.map((post) => (
                         <div key={post._id}>
                             {post.isOwner && <button onClick={() => handleDelete(post._id)}>delete</button>}
-                            <strong>Time</strong> {post.timestamp}
-                            <strong>Content:</strong> {post.content}
+                            <p>
+                                <strong>Time:</strong> {post.timestamp}
+                            </p>
+                            <p>
+                                <strong>Content:</strong> {post.content}
+                            </p>
                             <form onSubmit={handleCommentSubmit}>
                             <input type='textarea' placeholder=''></input>
                             <button type='submit' className='comment-button'>Send comment</button>
                         </form>
-                        <button>like</button>
+                        <button 
+                        data-postid = {post._id}
+                        onClick={() => handleLikeButton(post._id, post.liked)}
+                        style={{backgroundColor: post.liked ? '#e74c3c' : '#3498db',}}>
+                        {post.liked ? 'Unlike' : 'Like'}
+                        </button>
                         </div>
                     ))}
                 </div>
