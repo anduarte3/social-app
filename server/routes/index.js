@@ -19,5 +19,6 @@ router.delete('/api/post/:postId', userValidation, postsController.delete_post);
 
 // ------------------------------ LIKES ------------------------------ //
 router.put('/api/post/:postId/like', userValidation, postsController.update_likes);
+router.put('/api/post/:postId/unlike', userValidation, postsController.update_likes);
 
 module.exports = router;

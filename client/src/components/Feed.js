@@ -6,7 +6,7 @@ const Feed = () => {
     const location = useLocation();
     const username = location.state && location.state.username;
     const [likeCount, setLikeCount] = useState(0);
-    const [likedPosts, setLikedPosts] = useState([]);
+    const [likes, setLikes] = useState([]);
     const [message, setMessage] = useState('');
     const [postText, setPostText] = useState({ post: '' });
     const [postDataArray, setPostDataArray] = useState([]);
@@ -63,10 +63,12 @@ const Feed = () => {
 
             if (response.ok) {
                 const responseData = await response.json();
+                console.log(responseData);
                 await fetchPosts();
                 setPostText({ post: '' })
             } else {
                 const errorData = await response.json();
+                console.log(errorData);
             }
         } catch (error) {
             console.error('Error sending data:', error.message);
@@ -92,17 +94,8 @@ const Feed = () => {
         }
     }
 
-    const handleIncrementLike = (postId) => {
-        setLikedPosts((prevLikedPosts) => [...prevLikedPosts, postId]);
-        console.log(`Post ${postId} liked`);
-    };
-    
-    const handleDecrementLike = (postId) => {
-        setLikedPosts((prevLikedPosts) => prevLikedPosts.filter((id) => id !== postId));
-        console.log(`Post ${postId} unliked`);
-    };
-
     const handleLikeButton = async (postId) => {
+        console.log(postId);
         try {
             const token = localStorage.getItem('token');
             const response = await fetch(`http://localhost:3001/api/post/${postId}/like`, {
@@ -115,11 +108,11 @@ const Feed = () => {
 
             if (response.ok) {
                 const responseData = await response.json();
-
-                if (responseData.liked) {
-                    handleIncrementLike(postId);
-                } else {
-                    handleDecrementLike(postId);
+                console.log(responseData);
+                if (responseData.liked) {              
+                    await fetchPosts();
+                } else {              
+                    await fetchPosts();
                 }
                 console.log('Like updated successfully');
             }
@@ -146,6 +139,7 @@ const Feed = () => {
 
             if (response.ok) {
                 const responseData = await response.json();
+                console.log(responseData.posts);
                 setPostDataArray(responseData.posts);
             } else {
                 console.error('Failed to fetch posts');
@@ -189,16 +183,10 @@ const Feed = () => {
                             <p>
                                 <strong>Content:</strong> {post.content}
                             </p>
-                            <form onSubmit={handleCommentSubmit}>
-                            <input type='textarea' placeholder=''></input>
-                            <button type='submit' className='comment-button'>Send comment</button>
-                        </form>
-                        <button 
-                        data-postid = {post._id}
-                        onClick={() => handleLikeButton(post._id, post.liked)}
-                        style={{backgroundColor: post.liked ? '#e74c3c' : '#3498db',}}>
-                        {post.liked ? 'Unlike' : 'Like'}
-                        </button>
+                            <p>
+                                <strong>Like Count</strong> {post.likesCount}
+                            </p>
+                        <button onClick={() => handleLikeButton(post._id)}>like me</button>
                         </div>
                     ))}
                 </div>

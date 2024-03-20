@@ -29,13 +29,17 @@ exports.get_posts = asyncHandler(async (req, res, next) => {
         const userId = req.user.sub;
         const posts = await Post.find();
 
-        const postsWithOwnership = posts.map(post => {
+        const postsWithLikesCount = await Promise.all(posts.map(async post => {
             const postObject = post.toObject();
+            const likesCount = post.likes.length;
+
+            postObject.likesCount = likesCount;
+            // Determine if the current user is the owner of the post
             postObject.isOwner = post.user_id.toString() === userId;
             return postObject;
-        });
-
-        return res.status(200).json({ posts: postsWithOwnership });
+        }));
+        console.log('post:', postsWithLikesCount);
+        return res.status(200).json({ posts: postsWithLikesCount });
     } catch (error) {
         console.error('Error fetching posts:', error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -70,25 +74,29 @@ exports.update_likes = asyncHandler(async (req, res, next) => {
     const userId = req.user.sub;
 
     try {
-        const existingPost = await Post.findOne({
-            'likes': { $elemMatch: { 'user_id': userId }}
-        });
-    
-        if (!existingPost) {
-            const updatedPost = await Post.findOneAndUpdate(
-                { _id: postId },
+        const post = await Post.findOne({_id: postId});
+        
+        if (!post) return res.status(404).json({ message: 'Post not found' });
+        
+        const likedPost = post.likes.some(like => like.user_id.equals(userId));
+
+        if (!likedPost) {
+            await Post.findByIdAndUpdate(
+                postId,
                 { $addToSet: { likes: { user_id: userId } } },
-                { new: true }
+                { new: true } // Return the updated document
             );
-            console.log('Like added:', updatedPost);
+            console.log('User has liked the post');
+            // Handle the case where the user has already liked the post
             res.status(200).json({ liked: true, message: 'Like added successfully' });
         } else {
-            const updatedPost = await Post.findOneAndUpdate(
-                { _id: postId, 'likes.user_id': userId },
+            await Post.findByIdAndUpdate(
+                postId,
                 { $pull: { likes: { user_id: userId } } },
-                { new: true }
+                { new: true } 
             );
-            console.log('Like removed:', updatedPost);
+            console.log('User has unliked the post');
+            // Handle the case where the user has not liked the post
             res.status(200).json({ liked: false, message: 'Like removed successfully' });
         }
     } catch (error) {
