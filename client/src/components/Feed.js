@@ -4,12 +4,12 @@ import { useState, useEffect } from 'react';
 const Feed = () => {
     const navigate = useNavigate();
     const location = useLocation();
+    const [userId, setUserId] = useState(null); // State to store the user ID
     const username = location.state && location.state.username;
-    const [likeCount, setLikeCount] = useState(0);
-    const [likes, setLikes] = useState([]);
-    const [message, setMessage] = useState('');
     const [postText, setPostText] = useState({ post: '' });
     const [postDataArray, setPostDataArray] = useState([]);
+    const [isClicked, setIsClicked] = useState(false);
+    const [commentText, setCommentText] = useState('');
 
     // ------------------------------ TOKEN/LOGIN & LOGOUT ------------------------------ //
 
@@ -78,7 +78,7 @@ const Feed = () => {
     const handleDelete = async (postId) => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:3001/api/post/${postId}`, {
+            const response = await fetch(`http://localhost:3001/api/post/${postId}/delete`, {
               method: 'DELETE',
               headers: {
                 'Content-Type': 'application/json',
@@ -93,9 +93,8 @@ const Feed = () => {
             console.error('Error deleting post:', error.message);
         }
     }
-
+    // ------------------------------ LIKES ------------------------------ //
     const handleLikeButton = async (postId) => {
-        console.log(postId);
         try {
             const token = localStorage.getItem('token');
             const response = await fetch(`http://localhost:3001/api/post/${postId}/like`, {
@@ -108,7 +107,7 @@ const Feed = () => {
 
             if (response.ok) {
                 const responseData = await response.json();
-                console.log(responseData);
+                //console.log(responseData);
                 if (responseData.liked) {              
                     await fetchPosts();
                 } else {              
@@ -121,11 +120,82 @@ const Feed = () => {
         }
     };
 
-    // To be added
-    const handleCommentSubmit = async (e) => {
-        e.preventDefault();
+    // ------------------------------ COMMENTS ------------------------------ //
+    const handleAddComment = (e) => {
+        setIsClicked(true);
     }
 
+    const handleCommentChange = (e) => {
+        setCommentText({
+            ...commentText,
+            [e.target.name]: e.target.value,
+        })
+    }
+
+    const handleInput = async (e, postId) => {
+        try {
+            const token = localStorage.getItem('token');
+            const formData = new FormData(e.target); // Get the form data
+            const commentText = formData.get('comment'); // Extract the comment text from the form data
+    
+            const response = await fetch(`http://localhost:3001/api/post/${postId}/comment/create`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ commentText })
+            });
+
+            if (response.ok) {
+                const responseData = await response.json();
+                if (responseData.commentPost) {
+                    console.log(responseData.userId);
+                    await fetchPosts();
+                } else {
+                    await fetchPosts();
+                }
+            }
+        } catch (error) {
+            console.error('Error fetching posts:', error);
+        }
+        setIsClicked(false);
+    }
+
+    const handleCancel = (e) => {
+        setIsClicked(false);
+    }
+
+    const handleDeleteComment = async (postId, commentId) => {
+        try {
+            const token = localStorage.getItem('token');
+            console.log(token);
+            const response = await fetch(`http://localhost:3001/api/post/${postId}/comment/${commentId}/delete`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+            });
+
+            if (response.ok) {
+                const responseData = await response.json();
+                if (responseData) {
+                    await fetchPosts();
+                } else {
+                    await fetchPosts();
+                }
+            } 
+        } catch (error) {
+            console.error('Error fetching posts:', error);
+        }
+    }
+
+    const handleEditComment = (e) => {
+        
+    }
+
+    // ------------------------------ GET POSTS ------------------------------ //
     const fetchPosts = async () => {
         try {
             const token = localStorage.getItem('token');
@@ -167,7 +237,7 @@ const Feed = () => {
                     value={postText.post}
                     onChange={handleChange}
                 />
-                <button type="submit" className="post-button">Create Post</button>
+                <button type="submit" className="post-button">Post</button>
             </form>
 
             {/* Render new post here */}
@@ -186,7 +256,44 @@ const Feed = () => {
                             <p>
                                 <strong>Like Count</strong> {post.likesCount}
                             </p>
+                            <div>
+                            {post.comments.map((comment) => (
+                                <div key={comment._id}>
+                                    {/* Display comment content */}
+                                    <p>{comment.content}
+                                    {/* {comment.user_id === currentUser.id && (  */}
+                                        <span>
+                                            <button onClick={() => handleEditComment(post._id, comment._id)}>Edit</button>
+                                            <button onClick={() => handleDeleteComment(post._id, comment._id)}>Delete</button>
+                                        </span>
+                                    {/* )} */}
+                                    </p>
+                                </div>
+                            ))}
+                            </div>
                         <button onClick={() => handleLikeButton(post._id)}>like me</button>
+                        
+                        {isClicked && (
+                            <div className="comment-section">
+                                <form onSubmit={(e) => handleInput(e, post._id)}>                                
+                                    <input
+                                        type="text" 
+                                        name='comment' 
+                                        placeholder='Reply to post'
+                                        onChange={handleCommentChange}
+                                    />
+                                    <div className="option">
+                                        <button type="submit" className="reply-button">Post</button>
+                                        <button type="button" className="cancel-button" onClick={handleCancel}>X</button>
+                                    </div>
+                                </form>
+                            </div> 
+                        )}
+                        {!isClicked && (
+                            <div className="comment-section">
+                                <button onClick={() => handleAddComment(post._id)}>Add comment</button>
+                            </div>
+                        )}
                         </div>
                     ))}
                 </div>
