@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const { format } = require('date-fns');
 
 const PostSchema = new Schema({
     user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
@@ -14,5 +15,11 @@ const PostSchema = new Schema({
       user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     }]
 });
+
+PostSchema.virtual('formattedTimestamp').get(function() {
+  return format(this.timestamp, 'd MMM yyyy');
+});
+
+PostSchema.set('toObject', { virtuals: true });
 
 module.exports = mongoose.model("Post", PostSchema);

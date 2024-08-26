@@ -4,6 +4,7 @@ const router = express.Router();
 const authController = require('../controllers/authController');
 const postsController = require('../controllers/postsController');
 const { userValidation } = require('../userValidation');
+const { formatDate } = require('date-fns');
 
 // ------------------------------ USERS ------------------------------ //
 router.post('/api/register', authController.register_post);
