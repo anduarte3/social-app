@@ -2,6 +2,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import user from '../img/user-icon.png'
 import password from '../img/password-icon.png'
+import profile from '../img/profile.png'
+import padlock from '../img/padlock.png'
 
 const Login = () => {
     const navigate = useNavigate();
@@ -51,43 +53,51 @@ const Login = () => {
     }
 
     return (
-        <div className='mainpage-section'>
-            <div className='login-title'>Login</div>
+        <div className='absolute h-full w-full px-5 py-24 [background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)]'>
+        <div className='relative flex flex-col justify-center overflow-hidden py-6 sm:py-12'>
+            <div className='relative w-full px-20 pt-10 pb-8 shadow-2xl ring-1 ring-gray-900/5 
+            xs:mx-auto xs:max-w-2xl xs:rounded-xl xs:px-10 xs:pt-10 xs:pb-10 text-white'>
+            <div className='font-extrabold ext-4xl leading-tight text-4xl text-transparent bg-clip-text bg-gradient-to-r from-teal-600 via-sky-400 to-cyan-500 
+            transform scale-100'>Be Social, Be You.</div>
             <div className='login-container'>
                 <form onSubmit={handleSubmit}>
-                    <div className="login-fields">
+                    <div className="flex px-4 pb-2 pt-14">
                         {/* Username Input */}
-                        <img src={user} className='login-icons'></img>
-                        <div className='input-label'>
-                            <label>Username</label>
+                        <img src={profile} className='w-8 h-8'></img>
+                        <div className='flex hover-pb-8 ml-2'>
+                            <label></label>
                             <input 
                                 type='text' 
                                 name='username' 
                                 placeholder='Username'
                                 value={loginData.username}
                                 onChange={handleChange}
+                                className='placeholder-white bg-black border-transparent transition focus:outline-none hover:translate-x-3 delay-150 focus:border-b-2'
                             />
                         </div>
                     </div>
-                    <div className="login-fields">
+                    <div className="flex px-4 pb-14">
                         {/* Password Input */}
-                        <img src={password} className='login-icons'></img>
-                        <div className='input-label'>
-                            <label>Password</label>
+                        <img src={padlock} className='w-8 h-8'></img>
+                        <div className='flex hover-pb-8 ml-2'>
+                            <label></label>
                             <input 
                                 type="password" 
                                 name='password' 
                                 placeholder='Password'
                                 value={loginData.password}
                                 onChange={handleChange}
+                                className='placeholder-white bg-black border-transparent transition focus:outline-none hover:translate-x-3 delay-150 focus:border-b-2'
                             />
                         </div>
                     </div>
-                    <button type="submit" className="login-button">Login</button>
+                    <button type="submit" className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-5 border-b-2 border-blue-700 hover:border-blue-500 rounded">Login</button>
                 </form>
                 {message && <div>{message}</div>}
-                <p className='para'>Don't have an account? <Link to='/register' className='signup-link'> Sign Up</Link></p>
+                <p className='pt-5'>Don't have an account? <Link to='/register' className='font-bold text-blue-500'> Sign Up</Link></p>
             </div>
+            </div>
+        </div>
         </div>
     )
 }

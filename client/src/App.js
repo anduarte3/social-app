@@ -3,10 +3,14 @@ import Login from './components/Login'
 import Register from './components/Register'
 import Feed from './components/Feed'
 import './styles/global.css'
+import './styles/tailwind.css';
 
 function App() {
   return (
-    <div className="app">
+    
+    
+
+<div className="app">
       <Routes>
         <Route path='/' element={<div className='main-section'><Login/></div>}></Route>
         <Route path='/register' element={<Register/>}></Route>
