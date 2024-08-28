@@ -10,7 +10,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const bcrypt = require('bcryptjs');
 const dotenv = require('dotenv').config({ path: 'config.env' });
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
