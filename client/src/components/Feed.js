@@ -50,7 +50,7 @@ const Feed = () => {
         e.preventDefault();
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:3001/api/post', {
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/post`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -75,7 +75,7 @@ const Feed = () => {
     const handleDelete = async (postId) => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:3001/api/post/${postId}/delete`, {
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/post/${postId}/delete`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -94,7 +94,7 @@ const Feed = () => {
     const handleLikeButton = async (postId) => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:3001/api/post/${postId}/like`, {
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/post/${postId}/like`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -128,7 +128,7 @@ const Feed = () => {
             const formData = new FormData(e.target);
             const commentText = formData.get('comment');
 
-            const response = await fetch(`http://localhost:3001/api/post/${postId}/comment/create`, {
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/post/${postId}/comment/create`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -153,7 +153,7 @@ const Feed = () => {
     const handleDeleteComment = async (postId, commentId) => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:3001/api/post/${postId}/comment/${commentId}/delete`, {
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/post/${postId}/comment/${commentId}/delete`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -176,7 +176,7 @@ const Feed = () => {
     const fetchPosts = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:3001/api/feedload', {
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/feedload`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
