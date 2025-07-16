@@ -235,6 +235,7 @@ const Feed = () => {
 
                                         <p className='flex flex-row place-content-between'>
                                             <div className='font-bold text-sm'>{post.formattedTimestamp}</div>
+                                            <div className='font-bold text-sm mx-5'>{username}</div>
                                             {post.isOwner && <button onClick={() => handleDelete(post._id)}
                                                 className='font-bold text-lg px-2'>X</button>}
                                         </p>
