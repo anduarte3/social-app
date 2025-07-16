@@ -1,7 +1,8 @@
 # social-app
 
+### Social App
 <p align="center">
-A Social App
+
 
 <img width="1226" height="1232" alt="Sem Título" src="https://github.com/user-attachments/assets/644151bb-3de3-4545-ba68-3f2d5526c5ca" />
 
