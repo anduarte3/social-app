@@ -1,6 +1,7 @@
 # social-app
 
-# Social App
+**Social App** is a full-stack web application that enables users to connect in a social network–style environment. Users can create accounts, share posts, like and comment on others’ posts, and manage their own content. The app is built with a modern, responsive design and secure authentication.
+
 <p align="center">
 
 
@@ -26,7 +27,7 @@ Authentication: Passport.js with JWT
 
 ## 📖 Overview
 
-**Social App** is a full-stack web application that enables users to connect in a social network–style environment. Users can create accounts, share posts, like and comment on others’ posts, and manage their own content. The app is built with a modern, responsive design and secure authentication.
+
 
 ## ✨ Features
 
