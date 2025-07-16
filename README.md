@@ -1,6 +1,6 @@
 # social-app
 
-### Social App
+# Social App
 <p align="center">
 
 
