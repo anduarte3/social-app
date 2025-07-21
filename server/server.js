@@ -9,7 +9,7 @@ const createError = require('http-errors');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const bcrypt = require('bcryptjs');
-const dotenv = require('dotenv').config({ path: 'config.env' });
+const dotenv = require('dotenv').config({ path: '../.env' });
 const PORT = process.env.PORT || 3001;
 
 const mongoose = require("mongoose");

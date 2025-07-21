@@ -29,7 +29,8 @@ const Register = () => {
         e.preventDefault();
         //Send formData to the server via API
         try {
-            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/register`, {
+            // ${process.env.REACT_APP_LOCAL_URL} or ${process.env.REACT_APP_BACKEND_URL}
+            const response = await fetch(`${process.env.REACT_APP_LOCAL_URL}/api/register`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

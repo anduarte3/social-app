@@ -50,7 +50,8 @@ const Feed = () => {
         e.preventDefault();
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/post`, {
+            // ${process.env.LOCAL_URL} or ${process.env.REACT_APP_BACKEND_URL}
+            const response = await fetch(`${process.env.LOCAL_URL}/api/post`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -75,7 +76,8 @@ const Feed = () => {
     const handleDelete = async (postId) => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/post/${postId}/delete`, {
+            // ${process.env.REACT_APP_LOCAL_URL} or ${process.env.REACT_APP_BACKEND_URL}
+            const response = await fetch(`${process.env.REACT_APP_LOCAL_URL}/api/post/${postId}/delete`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -94,7 +96,8 @@ const Feed = () => {
     const handleLikeButton = async (postId) => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/post/${postId}/like`, {
+            // ${process.env.REACT_APP_LOCAL_URL} or ${process.env.REACT_APP_BACKEND_URL}
+            const response = await fetch(`${process.env.REACT_APP_LOCAL_URL}/api/post/${postId}/like`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -128,7 +131,8 @@ const Feed = () => {
             const formData = new FormData(e.target);
             const commentText = formData.get('comment');
 
-            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/post/${postId}/comment/create`, {
+            // ${process.env.REACT_APP_LOCAL_URL} or ${process.env.REACT_APP_BACKEND_URL}
+            const response = await fetch(`${process.env.REACT_APP_LOCAL_URL}/api/post/${postId}/comment/create`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -153,7 +157,8 @@ const Feed = () => {
     const handleDeleteComment = async (postId, commentId) => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/post/${postId}/comment/${commentId}/delete`, {
+            // ${process.env.REACT_APP_LOCAL_URL} or ${process.env.REACT_APP_BACKEND_URL}
+            const response = await fetch(`${process.env.REACT_APP_LOCAL_URL}/api/post/${postId}/comment/${commentId}/delete`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -176,7 +181,8 @@ const Feed = () => {
     const fetchPosts = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/feedload`, {
+            // ${process.env.REACT_APP_LOCAL_URL} or ${process.env.REACT_APP_BACKEND_URL}
+            const response = await fetch(`${process.env.REACT_APP_LOCAL_URL}/api/feedload`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -186,6 +192,8 @@ const Feed = () => {
 
             if (response.ok) {
                 const responseData = await response.json();
+                console.log(responseData);
+                
                 setPostDataArray(responseData.posts);
             } else {
                 console.error('Failed to fetch posts');
@@ -235,6 +243,7 @@ const Feed = () => {
 
                                         <p className='flex flex-row place-content-between'>
                                             <div className='font-bold text-sm'>{post.formattedTimestamp}</div>
+                                            <div className='font-bold text-sm mx-5'>{username}</div>
                                             {post.isOwner && <button onClick={() => handleDelete(post._id)}
                                                 className='font-bold text-lg px-2'>X</button>}
                                         </p>
@@ -256,6 +265,7 @@ const Feed = () => {
                                         <div>
                                             {post.comments.map((comment) => (
                                                 <div key={comment._id}>
+                                                    <div  className='m-1 p-1'></div>
                                                     <p>{comment.content}</p>
                                                 </div>
                                             ))}

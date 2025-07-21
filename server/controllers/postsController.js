@@ -34,9 +34,14 @@ exports.get_posts = asyncHandler(async (req, res, next) => {
             const postObject = post.toObject();
             const likesCount = post.likes.length;
 
+            // const user = await User.findById(post.user_id);
+            // postObject.username = user ? user.username : null;
+            
             postObject.likesCount = likesCount;
             // Determine if the current user is the owner of the post
             postObject.isOwner = post.user_id.toString() === userId;
+            console.log(postObject);
+            
             return postObject;
         }));
 

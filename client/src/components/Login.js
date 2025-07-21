@@ -7,7 +7,6 @@ import padlock from '../img/padlock.png'
 
 const Login = () => {
     const navigate = useNavigate();
-    //Define the default useState values
     const [message, setMessage] = useState('');
     const [loginData, setLoginData] = useState({ username: '', password: '',})
 
@@ -22,7 +21,10 @@ const Login = () => {
         e.preventDefault();
         //Send formData to the server via API
         try {
-            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/login`, {
+            // ${process.env.REACT_APP_LOCAL_URL} or ${process.env.REACT_APP_BACKEND_URL}
+            const apiUrl = process.env.REACT_APP_LOCAL_URL;
+            console.log('API URL:', apiUrl); // Should log: http://localhost:3001
+            const response = await fetch(`${process.env.REACT_APP_LOCAL_URL}/api/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
