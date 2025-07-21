@@ -55,7 +55,7 @@ const Login = () => {
     }
 
     return (
-        <div className='absolute h-full w-full px-5 py-24 [background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)]'>
+        <div className='absolute h-full w-full px-5 py-24 bg-black'>
         <div className='relative flex flex-col justify-center overflow-hidden py-6 sm:py-12'>
             <div className='relative w-full px-20 pt-10 pb-8 shadow-2xl ring-1 ring-gray-900/5 
             xs:mx-auto xs:max-w-2xl xs:rounded-xl xs:px-10 xs:pt-10 xs:pb-10 text-white'>

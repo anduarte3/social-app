@@ -208,7 +208,7 @@ const Feed = () => {
     }, []);
 
     return (
-        <div className='absolute min-h-full w-full px-5 py-24 [background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)]'>
+        <div className='absolute min-h-full w-full px-5 py-24 bg-black'>
             <button onClick={handleLogout} className='absolute top-0 right-0 bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-5 mt-10 mr-10 border-b-2 border-blue-700 hover:border-blue-500 rounded'>
                 Logout
             </button>
