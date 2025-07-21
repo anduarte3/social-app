@@ -35,7 +35,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
-app.use(session({ secret: "cats", resave: false, saveUninitialized: true }));
+app.use(session({ secret: process.env.JWT_SECRET, resave: false, saveUninitialized: true }));
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(passport.initialize());
