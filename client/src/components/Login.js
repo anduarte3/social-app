@@ -8,6 +8,7 @@ import padlock from '../img/padlock.png'
 const Login = () => {
     const navigate = useNavigate();
     const [message, setMessage] = useState('');
+    const [errorMsg, setErrorMsg] = useState('');
     const [loginData, setLoginData] = useState({ username: '', password: '',})
 
     const handleChange = (e) => {
@@ -19,7 +20,7 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        //Send formData to the server via API
+        // Send formData to the server via API
         try {
             // ${process.env.REACT_APP_LOCAL_URL} or ${process.env.REACT_APP_BACKEND_URL}
             const apiUrl = process.env.REACT_APP_LOCAL_URL;
@@ -41,16 +42,16 @@ const Login = () => {
                     password: '',
                 })
                 
-                //Store the token in localStorage or cookies
+                // Store the token in localStorage or cookies
                 localStorage.setItem('token', responseData.token);
             } else {
                 const errorData = await response.json();
-                console.log('error api response', errorData);
-                navigate('/login');
+                console.log(errorData);
+                setErrorMsg(errorData.message)
             }
         } catch (error) {
-            console.error('Error sending data:', error.message);
-            setMessage('An error occurred. Please try again.');
+            console.error('Error sending data:', error.message);            
+            setErrorMsg('There maybe be issues connecting to server. Please try again later.');
         }
     }
 
@@ -97,6 +98,8 @@ const Login = () => {
                 </form>
                 {message && <div>{message}</div>}
                 <p className='pt-5'>Don't have an account? <Link to='/register' className='font-bold text-blue-500'> Sign Up</Link></p>
+                {errorMsg && <p className="text-red-500 py-5">{errorMsg}</p>}
+
             </div>
             </div>
         </div>

@@ -11,6 +11,7 @@ const Register = () => {
     const navigate = useNavigate();
     //Define the default useState values
     const [message, setMessage] = useState('')
+    const [errorMsg, setErrorMsg] = useState('');
     const [formData, setFormData] = useState({
         username: '',
         email: '',
@@ -51,15 +52,16 @@ const Register = () => {
                 navigate('/login')
             } else {
                 const errorData = await response.json();
+                console.log(errorData);
                 if (errorData.errorValidation) {
-                    setMessage(`${errorData.errorValidation[0].msg}`)
+                    setErrorMsg(`${errorData.errorValidation[0].msg}`)
                 } else {
-                    setMessage(`${errorData.errorMessages[0].msg}`)
+                    setErrorMsg(`${errorData.errorMessages[0].msg}`)
                 }
             }
         } catch (error) {
             console.error('Error sending data:', error.message);
-            setMessage('An error occurred. Please try again.');
+            setErrorMsg('There maybe be issues connecting to server. Please try again later.');
         }
     }
 
@@ -135,6 +137,7 @@ const Register = () => {
                             <button type="submit" className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-5 mt-10 border-b-2 border-blue-700 hover:border-blue-500 rounded">Sign Up</button>
                         </form>
                         {message && <div>{message}</div>}
+                        {errorMsg && <p className="text-red-500 py-5">{errorMsg}</p>}
                         <p className='mt-3'>Already have an account? <Link to='/' className='font-bold text-blue-500'> Sign In</Link></p>
                     </div>
                 </div>

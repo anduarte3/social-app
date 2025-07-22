@@ -20,8 +20,8 @@ exports.register_post = [
     .escape()
     .withMessage('Email must be specified.'),
     
-    body('formData.password').isLength({ min: 6 }),
-    body('formData.confirmPassword').custom((value, { req }) => {
+    body('formData.password').isLength({ min: 6 }).withMessage(`Password can't be empty.`),
+    body('formData.confirmPassword').isLength({ min: 6}).withMessage(`Confirm Password can't be empty.`).custom((value, { req }) => {
         return value === req.body.formData.password
     }).withMessage('Passwords do not match.'),
 
@@ -35,9 +35,9 @@ exports.register_post = [
         if (!errors.isEmpty()) {
             // If there are validation errors, send a JSON response with the errors
             const errorValidation = errors.array() 
+            console.log(errorValidation);
+            
             res.status(400).json({ errorValidation });
-        } else if (takenUsername.length > 0 || takenEmail.length > 0) {
-            res.status(400).json({ errorMessages: [{ msg: 'Username or Email already taken'}]});
         } else {
             bcrypt.hash(req.body.formData.password, 10, async (err, hashedPassword) => {
                 if (err) return next(err)
