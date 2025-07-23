@@ -1,7 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import user from '../img/user-icon.png'
-import password from '../img/password-icon.png'
 import profile from '../img/profile.png'
 import padlock from '../img/padlock.png'
 
