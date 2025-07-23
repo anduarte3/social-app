@@ -26,13 +26,6 @@ const Register = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!e.target.checkValidity()) {
-            e.target.reportValidity(); // ✅ manually show "Please fill out this field"
-            return;
-        }
-
-
-        //Send formData to the server via API
         try {
             // ${process.env.REACT_APP_LOCAL_URL} or ${process.env.REACT_APP_BACKEND_URL}
             const response = await fetch(`${process.env.REACT_APP_LOCAL_URL}/api/register`, {
