@@ -1,8 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
-import user from '../img/user-icon.png'
-import password from '../img/password-icon.png'
-//import mail from '../img/mail.png'
 import profile from '../img/profile.png'
 import padlock from '../img/padlock.png'
 import mail from '../img/email.png'
@@ -19,7 +16,7 @@ const Register = () => {
         confirmPassword: '',
     })
 
-    const handleChange = (e) => {
+    const handleChange = (e) => {        
         setFormData({
             ...formData,
             [e.target.name]: e.target.value,
@@ -28,6 +25,13 @@ const Register = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (!e.target.checkValidity()) {
+            e.target.reportValidity(); // ✅ manually show "Please fill out this field"
+            return;
+        }
+
+
         //Send formData to the server via API
         try {
             // ${process.env.REACT_APP_LOCAL_URL} or ${process.env.REACT_APP_BACKEND_URL}
@@ -80,12 +84,13 @@ const Register = () => {
                                 <div className='flex hover-pb-8 ml-2'>
                                     <label></label>
                                         <input 
-                                            type='text' 
+                                            type='text'
                                             name='username' 
                                             placeholder='Username'
                                             value={formData.username}
                                             onChange={handleChange}
                                             className='placeholder-white bg-black border-transparent transition focus:outline-none hover:translate-x-3 delay-150 focus:border-b-2'
+                                            required
                                         />
                                 </div>
                             </div>
@@ -101,6 +106,7 @@ const Register = () => {
                                         value={formData.email}
                                         onChange={handleChange}
                                         className='placeholder-white bg-black border-transparent transition focus:outline-none hover:translate-x-3 delay-150 focus:border-b-2'
+                                        required
                                     />
                                 </div>
                             </div>
@@ -116,6 +122,7 @@ const Register = () => {
                                         value={formData.password}
                                         onChange={handleChange}
                                         className='placeholder-white bg-black border-transparent transition focus:outline-none hover:translate-x-3 delay-150 focus:border-b-2'
+                                        required
                                     />
                                 </div>
                             </div>
@@ -131,6 +138,7 @@ const Register = () => {
                                         value={formData.confirmPassword}
                                         onChange={handleChange}
                                         className='placeholder-white bg-black border-transparent transition focus:outline-none hover:translate-x-3 delay-150 focus:border-b-2'
+                                        required
                                     />
                                 </div>
                             </div>
