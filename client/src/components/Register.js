@@ -50,8 +50,8 @@ const Register = () => {
             } else {
                 const errorData = await response.json();
                 console.log(errorData);
-                if (errorData.errorValidation) {
-                    setErrorMsg(`${errorData.errorValidation[0].msg}`)
+                if (errorData.errorInfo) {
+                    setErrorMsg(`${errorData.errorInfo[0].msg}`)
                 } else {
                     setErrorMsg(`${errorData.errorMessages[0].msg}`)
                 }
