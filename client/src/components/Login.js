@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import profile from '../img/profile.png'
-import padlock from '../img/padlock.png'
+import profile from '../assets/profile.png'
+import padlock from '../assets/padlock.png'
 
 const Login = () => {
     const navigate = useNavigate();

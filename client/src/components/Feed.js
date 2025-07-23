@@ -1,7 +1,7 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import blackheart from '../img/heart.png';
-import comment from '../img/comment.png';
+import blackheart from '../assets/heart.png';
+import comment from '../assets/comment.png';
 
 const Feed = () => {
     const navigate = useNavigate();
@@ -50,8 +50,8 @@ const Feed = () => {
         e.preventDefault();
         try {
             const token = localStorage.getItem('token');
-            // ${process.env.LOCAL_URL} or ${process.env.REACT_APP_BACKEND_URL}
-            const response = await fetch(`${process.env.LOCAL_URL}/api/post`, {
+            // ${process.env.REACT_APP_LOCAL_URL} or ${process.env.REACT_APP_BACKEND_URL}
+            const response = await fetch(`${process.env.REACT_APP_LOCAL_URL}/api/post`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -193,7 +193,6 @@ const Feed = () => {
             if (response.ok) {
                 const responseData = await response.json();
                 console.log(responseData);
-                
                 setPostDataArray(responseData.posts);
             } else {
                 console.error('Failed to fetch posts');
@@ -227,6 +226,7 @@ const Feed = () => {
                                     value={postText.post}
                                     onChange={handleChange}
                                     className='bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mt-2'
+                                    required
                                 />
                                 <button type="submit"
                                     className='bg-blue-500 hover:bg-blue-400 text-white font-bold py-5 px-10 mt-10 mr-10 border-b-2 border-blue-700 hover:border-blue-500 rounded'>
@@ -241,16 +241,15 @@ const Feed = () => {
                                 {postDataArray.map((post) => (
                                     <div className='border-2 border-gray-400 rounded-2xl mt-10 p-5 flex flex-col text-white' key={post._id}>
 
-                                        <p className='flex flex-row place-content-between'>
+                                        <div className='flex flex-row place-content-between'>
                                             <div className='font-bold text-sm'>{post.formattedTimestamp}</div>
                                             <div className='font-bold text-sm mx-5'>{username}</div>
                                             {post.isOwner && <button onClick={() => handleDelete(post._id)}
                                                 className='font-bold text-lg px-2'>X</button>}
-                                        </p>
-                                        <p>
+                                        </div>
+                                        
                                             <div className='text-4xl py-2 px-5 mr-10 mt-5 mb-5'>{post.content}</div>
-                                        </p>
-                                        <p className='flex flex-row ml-5 items-center'>
+                                        <div className='flex flex-row ml-5 items-center'>
                                             <button onClick={() => handleLikeButton(post._id)} className='flex items-center'>
                                                 <img src={blackheart} className='w-6 h-6' alt="like" />
                                                 <span className='ml-2 text-lg'>{post.likesCount}</span>
@@ -260,7 +259,7 @@ const Feed = () => {
                                                 <img src={comment} className='w-7 h-7' alt="comment" />
                                                 <span className='ml-2 text-lg'>Comment</span>
                                             </button>
-                                        </p>
+                                        </div>
 
                                         <div>
                                             {post.comments.map((comment) => (

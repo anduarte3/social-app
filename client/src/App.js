@@ -2,8 +2,8 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import Login from './components/Login'
 import Register from './components/Register'
 import Feed from './components/Feed'
-import './styles/global.css'
-import './styles/tailwind.css';
+import './assets/global.css'
+import './assets/tailwind.css';
 
 function App() {
 
