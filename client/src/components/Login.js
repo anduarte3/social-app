@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import profile from '../assets/profile.png'
 import padlock from '../assets/padlock.png'
 
@@ -30,7 +30,6 @@ const Login = () => {
             });
             if (response.ok) {
                 const responseData = await response.json();
-                console.log(responseData);
                 setMessage(responseData.message);
                 navigate('/feed', {state: {username: loginData.username}});
                 setLoginData({
@@ -42,11 +41,9 @@ const Login = () => {
                 localStorage.setItem('token', responseData.token);
             } else {
                 const errorData = await response.json();
-                console.log(errorData);
                 setErrorMsg(errorData.message)
             }
         } catch (error) {
-            console.error('Error sending data:', error.message);            
             setErrorMsg('There maybe be issues connecting to server. Please try again later.');
         }
     }
