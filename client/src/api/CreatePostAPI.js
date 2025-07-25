@@ -1,29 +1,27 @@
 
-async function CreatePostAPI(e, postId) {
-    e.preventDefault();
+async function CreatePostAPI(postText) {
 
     try {
         const token = localStorage.getItem('token');
-        const formData = new FormData(e.target);
-        const commentText = formData.get('comment');
-
         // ${process.env.REACT_APP_LOCAL_URL} or ${process.env.REACT_APP_BACKEND_URL}
-        const response = await fetch(`${process.env.REACT_APP_LOCAL_URL}/api/post/${postId}/comment/create`, {
+        const response = await fetch(`${process.env.REACT_APP_LOCAL_URL}/api/post`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify({ commentText })
+            body: JSON.stringify({ postText }),
         });
 
         if (response.ok) {
+            const responseData = await response.json();
             //await fetchPosts();
+        } else {
+            const errorData = await response.json();
         }
     } catch (error) {
-        console.error('Error fetching posts:', error);
+        console.error('Error sending data:', error.message);
     }
-    setIsClicked(false);
 
 }
 

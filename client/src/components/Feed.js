@@ -12,7 +12,6 @@ const Feed = () => {
     const [userId, setUserId] = useState(null); // State to store the user ID
     const username = location.state && location.state.username;
     const [postText, setPostText] = useState({ post: '' });
-    
     const [commentText, setCommentText] = useState('');
 
     TokenCheck();

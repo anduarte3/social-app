@@ -1,14 +1,39 @@
 import { useState } from "react";
-import CreatePostAPI from "../api/CreatePostAPI";
 
-function CreateComment(post) {
+function CreateComment() {
     const [isClicked, setIsClicked] = useState(false);
+
+    const handleInput = async (e, postId) => {
+        e.preventDefault();
+        try {
+            const token = localStorage.getItem('token');
+            const formData = new FormData(e.target);
+            const commentText = formData.get('comment');
+
+            // ${process.env.REACT_APP_LOCAL_URL} or ${process.env.REACT_APP_BACKEND_URL}
+            const response = await fetch(`${process.env.REACT_APP_LOCAL_URL}/api/post/${postId}/comment/create`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ commentText })
+            });
+
+            if (response.ok) {
+                //await fetchPosts();
+            }
+        } catch (error) {
+            console.error('Error fetching posts:', error);
+        }
+        setIsClicked(false);
+    };
 
     return (
         <div>
             {isClicked && (
                 <div className="comment-section">
-                    <form onSubmit={(e) => CreatePostAPI(e, post._id)}>
+                    <form onSubmit={(e) => handleInput(e, post._id)}>
                         <input
                             type="text"
                             name='comment'

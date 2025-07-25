@@ -1,10 +1,8 @@
 import { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import CreatePostAPI from '../api/CreatePostAPI';
 
 function CreatePost() {
     const [postText, setPostText] = useState({ post: '' });
-    const location = useLocation();
-    const username = location.state && location.state.username;
     
     const handleChange = (e) => {
         setPostText({
@@ -15,30 +13,9 @@ function CreatePost() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try {
-            const token = localStorage.getItem('token');
-            // ${process.env.REACT_APP_LOCAL_URL} or ${process.env.REACT_APP_BACKEND_URL}
-            const response = await fetch(`${process.env.REACT_APP_LOCAL_URL}/api/post`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({ postText, username }),
-            });
-
-            if (response.ok) {
-                const responseData = await response.json();
-                //await fetchPosts();
-                setPostText({ post: '' });
-            } else {
-                const errorData = await response.json();
-                console.log(errorData);
-            }
-        } catch (error) {
-            console.error('Error sending data:', error.message);
-        }
-    };
+        await CreatePostAPI(postText);
+        setPostText({ post: '' })
+    }
 
     return (
         <div>
