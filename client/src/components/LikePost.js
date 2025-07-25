@@ -1,35 +1,26 @@
 import blackheart from '../assets/heart.png';
+import LikePostAPI from '../api/LikePostAPI';
 
-function LikePost(post) {
+function LikePost({post}) {
 
-    const handleLike = async (postId) => {
-        try {
-            const token = localStorage.getItem('token');
-            // ${process.env.REACT_APP_LOCAL_URL} or ${process.env.REACT_APP_BACKEND_URL}
-            const response = await fetch(`${process.env.REACT_APP_LOCAL_URL}/api/post/${postId}/like`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-            });
+    const findPostToLike = (postId) => {
+        let postID;
 
-            if (response.ok) {
-                //await fetchPosts();
+        for (let i=0; i<post._id.length; i++) {
+            if (postId === post._id) {
+                postID = post._id;
+                return LikePostAPI(postId);
             }
-        } catch (error) {
-            console.error('Error updating likes:', error.message);
         }
-    };
-
+    }
+    
     return (
         <div>
-            <button onClick={() => handleLike(post._id)} className='flex items-center'>
+            <button onClick={() => findPostToLike(post._id)} className='flex items-center'>
                 <img src={blackheart} className='w-6 h-6' alt="like" />
-                <span className='ml-2 text-lg'>{post.likesCount}</span>
             </button>
         </div>
     )
 }
 
-export default LikePost
+export default LikePost;

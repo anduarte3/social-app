@@ -1,8 +1,8 @@
-import { useState } from "react";
-import RenderPosts from "../components/RenderPosts";
+import { useState, useEffect } from "react";
+import RenderPosts from "../hooks/RenderPosts";
 
 function GetPosts() {
-    const [postDataArray, setPostDataArray] = useState([]);
+    const [postData, setPostData] = useState([]);
 
     const fetchPosts = async () => {
         try {
@@ -17,8 +17,8 @@ function GetPosts() {
             });
 
             if (response.ok) {
-                const responseData = await response.json();
-                setPostDataArray(responseData.posts);
+                const responseData = await response.json();                
+                setPostData(responseData.posts);
             } else {
                 console.error('Failed to fetch posts');
             }
@@ -30,10 +30,10 @@ function GetPosts() {
     useEffect(() => {
         fetchPosts();
     }, []);
-
+    
     return (
         <div>
-            <RenderPosts postData={postDataArray}/>
+            <RenderPosts postData={postData}/>
         </div>
     )
 }

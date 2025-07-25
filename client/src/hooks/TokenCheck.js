@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 
-function useTokenCheck() {
+function TokenCheck() {
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -27,4 +27,4 @@ function useTokenCheck() {
 
 }
 
-export default useTokenCheck;
+export default TokenCheck;
