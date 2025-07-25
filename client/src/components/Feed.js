@@ -1,18 +1,14 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import TokenCheck from '../hooks/TokenCheck';
-
 import LogoutBtn from './LogoutBtn';
 import CreatePost from './CreatePost';
 import GetPosts from '../api/GetPosts'
 
 const Feed = () => {
-    const navigate = useNavigate();
     const location = useLocation();
     const [userId, setUserId] = useState(null); // State to store the user ID
     const username = location.state && location.state.username;
-    const [postText, setPostText] = useState({ post: '' });
-    const [commentText, setCommentText] = useState('');
 
     TokenCheck();
 
