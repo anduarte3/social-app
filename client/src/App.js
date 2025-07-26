@@ -1,4 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import Login from './components/Login'
 import Register from './components/Register'
 import Feed from './components/Feed'
@@ -6,7 +7,7 @@ import './assets/global.css'
 import './assets/tailwind.css';
 
 function App() {
-
+  
   return (
     <div className="app">
       <Routes>

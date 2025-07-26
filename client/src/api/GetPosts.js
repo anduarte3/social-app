@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import RenderPosts from "../hooks/RenderPosts";
+import socket from "../utils/socket";
 
 function GetPosts() {
     const [postData, setPostData] = useState([]);
@@ -29,6 +30,35 @@ function GetPosts() {
 
     useEffect(() => {
         fetchPosts();
+        
+        console.log(socket);
+        
+        socket.on('new_post', (newPost) => {
+            setPostData(prevPosts => [newPost, ...prevPosts]);
+        });
+
+        socket.on('post_deleted', (postId) => {
+            console.log('Post deleted:', postId);
+            setPostData(prevPosts => prevPosts.filter(post => post._id !== postId));
+        });
+
+        socket.on('post_updated', (updatedPost) => {
+            console.log('Post updated:', updatedPost);
+            setPostData(prevPosts => 
+            prevPosts.map(post => 
+                post._id === updatedPost._id ? updatedPost : post
+            )
+            );
+        });
+
+        return () => {
+            if (socket) {
+                socket.off('new_post');
+                socket.off('post_deleted');
+                socket.off('post_updated');
+            }
+        };
+
     }, []);
     
     return (
