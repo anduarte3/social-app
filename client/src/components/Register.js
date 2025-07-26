@@ -1,16 +1,14 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
-import user from '../img/user-icon.png'
-import password from '../img/password-icon.png'
-//import mail from '../img/mail.png'
-import profile from '../img/profile.png'
-import padlock from '../img/padlock.png'
-import mail from '../img/email.png'
+import profile from '../assets/profile.png'
+import padlock from '../assets/padlock.png'
+import mail from '../assets/email.png'
 
 const Register = () => {
     const navigate = useNavigate();
     //Define the default useState values
     const [message, setMessage] = useState('')
+    const [errorMsg, setErrorMsg] = useState('');
     const [formData, setFormData] = useState({
         username: '',
         email: '',
@@ -18,7 +16,7 @@ const Register = () => {
         confirmPassword: '',
     })
 
-    const handleChange = (e) => {
+    const handleChange = (e) => {        
         setFormData({
             ...formData,
             [e.target.name]: e.target.value,
@@ -27,9 +25,10 @@ const Register = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        //Send formData to the server via API
+
         try {
-            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/register`, {
+            // ${process.env.REACT_APP_LOCAL_URL} or ${process.env.REACT_APP_BACKEND_URL}
+            const response = await fetch(`${process.env.REACT_APP_LOCAL_URL}/api/register`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -50,20 +49,21 @@ const Register = () => {
                 navigate('/login')
             } else {
                 const errorData = await response.json();
-                if (errorData.errorValidation) {
-                    setMessage(`${errorData.errorValidation[0].msg}`)
+                console.log(errorData);
+                if (errorData.errorInfo) {
+                    setErrorMsg(`${errorData.errorInfo[0].msg}`)
                 } else {
-                    setMessage(`${errorData.errorMessages[0].msg}`)
+                    setErrorMsg(`${errorData.errorMessages[0].msg}`)
                 }
             }
         } catch (error) {
             console.error('Error sending data:', error.message);
-            setMessage('An error occurred. Please try again.');
+            setErrorMsg('There maybe be issues connecting to server. Please try again later.');
         }
     }
 
     return (
-        <div className='absolute h-full w-full px-5 py-24 [background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)]'>
+        <div className='absolute h-full w-full px-5 py-24 bg-white'>
             <div className='relative flex flex-col justify-center overflow-hidden py-6 sm:py-12'>
                 <div className='relative w-full px-20 pt-10 pb-8 shadow-2xl ring-1 ring-gray-900/5 
                 xs:mx-auto xs:max-w-2xl xs:rounded-xl xs:px-10 xs:pt-10 xs:pb-10 text-white'>
@@ -77,12 +77,13 @@ const Register = () => {
                                 <div className='flex hover-pb-8 ml-2'>
                                     <label></label>
                                         <input 
-                                            type='text' 
+                                            type='text'
                                             name='username' 
                                             placeholder='Username'
                                             value={formData.username}
                                             onChange={handleChange}
                                             className='placeholder-white bg-black border-transparent transition focus:outline-none hover:translate-x-3 delay-150 focus:border-b-2'
+                                            required
                                         />
                                 </div>
                             </div>
@@ -98,6 +99,7 @@ const Register = () => {
                                         value={formData.email}
                                         onChange={handleChange}
                                         className='placeholder-white bg-black border-transparent transition focus:outline-none hover:translate-x-3 delay-150 focus:border-b-2'
+                                        required
                                     />
                                 </div>
                             </div>
@@ -113,6 +115,7 @@ const Register = () => {
                                         value={formData.password}
                                         onChange={handleChange}
                                         className='placeholder-white bg-black border-transparent transition focus:outline-none hover:translate-x-3 delay-150 focus:border-b-2'
+                                        required
                                     />
                                 </div>
                             </div>
@@ -128,12 +131,14 @@ const Register = () => {
                                         value={formData.confirmPassword}
                                         onChange={handleChange}
                                         className='placeholder-white bg-black border-transparent transition focus:outline-none hover:translate-x-3 delay-150 focus:border-b-2'
+                                        required
                                     />
                                 </div>
                             </div>
                             <button type="submit" className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-5 mt-10 border-b-2 border-blue-700 hover:border-blue-500 rounded">Sign Up</button>
                         </form>
                         {message && <div>{message}</div>}
+                        {errorMsg && <p className="text-red-500 py-5">{errorMsg}</p>}
                         <p className='mt-3'>Already have an account? <Link to='/' className='font-bold text-blue-500'> Sign In</Link></p>
                     </div>
                 </div>
