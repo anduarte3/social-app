@@ -28,4 +28,4 @@ function DeleteComment() {
     )
 }
 
-export default DeleteComment
+export default DeleteComment;
