@@ -31,7 +31,13 @@ app.use(logger('dev'));
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(cors());
+app.use(cors({
+  origin: process.env.NODE_ENV === 'production'
+    ? process.env.FRONTEND_URL // This should be your frontend domain  
+    : "http://localhost:3000", // Your local React app
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+}));
 app.use(session({ secret: process.env.JWT_SECRET, resave: false, saveUninitialized: true }));
 app.use(express.json());
 app.use(bodyParser.json());
@@ -61,13 +67,14 @@ error: req.app.get('env') === 'development' ? err.stack : {}
 const server = createServer(app);
 const io = new Server(server, {
 cors: {
-origin: process.env.NODE_ENV === 'production'
-? process.env.FRONTEND_URL
-: "http://localhost:3000",
-methods: ["GET", "POST", "PUT", "DELETE"],
-credentials: true
- }
+  origin: process.env.NODE_ENV === 'production'
+    ? process.env.FRONTEND_URL
+    : "http://localhost:3000",
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+  }
 });
+
 app.set("io", io);
 io.on('connection', (socket) => {
 console.log('New client connected:', socket.id);
