@@ -5,7 +5,7 @@ async function DeletePostAPI(postId) {
         const token = localStorage.getItem('token');
         
         // ${process.env.REACT_APP_LOCAL_URL} or ${process.env.REACT_APP_BACKEND_URL}
-        const response = await fetch(`${process.env.REACT_APP_LOCAL_URL}/api/post/${postId}/delete`, {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/post/${postId}/delete`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
