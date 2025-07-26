@@ -31,13 +31,6 @@ app.use(logger('dev'));
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(cors({
-  origin: process.env.NODE_ENV === 'production'
-    ? process.env.FRONTEND_URL // This should be your frontend domain  
-    : "http://localhost:3000", // Your local React app
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
-}));
 app.use(session({ secret: process.env.JWT_SECRET, resave: false, saveUninitialized: true }));
 app.use(express.json());
 app.use(bodyParser.json());
@@ -63,12 +56,20 @@ error: req.app.get('env') === 'development' ? err.stack : {}
  });
 });
 
+app.use(cors({
+  origin: process.env.NODE_ENV === 'production'
+    ? "https://social-app-al2jczf7hr.netlify.app"
+    : "http://localhost:3000", 
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+}));
+
 // Socket.io
 const server = createServer(app);
 const io = new Server(server, {
 cors: {
   origin: process.env.NODE_ENV === 'production'
-    ? process.env.FRONTEND_URL
+    ? "https://social-app-al2jczf7hr.netlify.app"
     : "http://localhost:3000",
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
