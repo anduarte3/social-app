@@ -17,7 +17,6 @@ router.delete('/api/post/:postId/delete', userValidation, postsController.delete
 
 // ----------------------------- COMMENTS ----------------------------- //
 router.post('/api/post/:postId/comment/create', userValidation, postsController.create_comment);
-//router.put('/api/post/:postId/comment/:commentId/edit', userValidation, postsController.update_comment);
 router.delete('/api/post/:postId/comment/:commentId/delete', userValidation, postsController.delete_comment);
 
 // ------------------------------ LIKES ------------------------------ //
