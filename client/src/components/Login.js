@@ -21,7 +21,7 @@ const Login = () => {
         // Send formData to the server via API
         try {
             // ${process.env.REACT_APP_LOCAL_URL} or ${process.env.REACT_APP_BACKEND_URL}
-            const response = await fetch(`${process.env.REACT_APP_LOCAL_URL}/api/login`, {
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
