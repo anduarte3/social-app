@@ -29,6 +29,13 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(logger('dev'));
 app.use(express.urlencoded({ extended: false }));
+app.use(cors({
+  origin: process.env.NODE_ENV === 'production'
+    ? "https://social-app-al2jczf7hr.netlify.app"
+    : "http://localhost:3000", 
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({ secret: process.env.JWT_SECRET, resave: false, saveUninitialized: true }));
@@ -56,13 +63,7 @@ error: req.app.get('env') === 'development' ? err.stack : {}
  });
 });
 
-app.use(cors({
-  origin: process.env.NODE_ENV === 'production'
-    ? "https://social-app-al2jczf7hr.netlify.app"
-    : "http://localhost:3000", 
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
-}));
+
 
 // Socket.io
 const server = createServer(app);

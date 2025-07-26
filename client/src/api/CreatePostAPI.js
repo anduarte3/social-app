@@ -6,6 +6,7 @@ async function CreatePostAPI(postText) {
         // ${process.env.REACT_APP_LOCAL_URL} or ${process.env.REACT_APP_BACKEND_URL}
         const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/post`, {
             method: 'POST',
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`

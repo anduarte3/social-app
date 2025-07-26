@@ -30,6 +30,7 @@ const Register = () => {
             // ${process.env.REACT_APP_LOCAL_URL} or ${process.env.REACT_APP_BACKEND_URL}
             const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/register`, {
                 method: 'POST',
+                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json'
                     // like authentication token
