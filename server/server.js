@@ -10,6 +10,10 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const bcrypt = require('bcryptjs');
 const dotenv = require('dotenv').config({ path: '../.env' });
+const { createServer } = require('node:http');
+const { join } = require('node:path');
+const { Server } = require("socket.io");
+
 const PORT = process.env.PORT || 3001;
 
 const mongoose = require("mongoose");
@@ -49,8 +53,30 @@ app.use((req, res, next) => {
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
-//Start the server
-app.listen(PORT, () => {
+// Socket.io
+const server = createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: process.env.NODE_ENV === 'production' 
+      ? "https://yourdomain.com" 
+      : "http://localhost:3000",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true
+  }
+});
+
+app.set("io", io);
+
+io.on('connection', (socket) => {
+  console.log('New client connected:', socket.id);
+
+  socket.on('disconnect', () => {
+    console.log('Client disconnected:', socket.id);
+  });
+});
+
+// Start the server
+server.listen(PORT, () => {
   console.log(`Server is listening at http://localhost:${PORT}`);
 });
 
@@ -61,13 +87,11 @@ app.use(function(req, res, next) {
 
 // error handler
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+  res.status(err.status || 500).json({
+    message: err.message,
+    error: req.app.get('env') === 'development' ? err.stack : {}
+  });
 });
 
 module.exports = app;

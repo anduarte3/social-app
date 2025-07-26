@@ -8,7 +8,6 @@ const cookieParser = require('cookie-parser');
 
 // ------------------------------ POSTS ------------------------------ //
 exports.create_post = asyncHandler(async (req, res, next) => {
-    console.log(req.user.sub);
     const user = await User.findOne({ _id: req.user.sub });
 
     if (user) {
@@ -19,7 +18,15 @@ exports.create_post = asyncHandler(async (req, res, next) => {
             likes: []
         })
         await newPost.save();
-        return res.status(200).json({ post: newPost });
+
+        const postObject = newPost.toObject();
+        postObject.likesCount = newPost.likes.length; // Add this line
+        postObject.isOwner = newPost.user_id.toString() === req.user.sub;
+
+        const io = req.app.get('io');
+        io.emit('new_post', postObject);
+        
+        return res.status(200).json({ post: postObject }); // Changed to postObject
     } else {
         return res.status(404).json({ message: 'User not found' });
     }
@@ -40,10 +47,13 @@ exports.get_posts = asyncHandler(async (req, res, next) => {
             postObject.likesCount = likesCount;
             // Determine if the current user is the owner of the post
             postObject.isOwner = post.user_id.toString() === userId;
-            console.log(postObject);
             
             return postObject;
         }));
+
+        // Remove this line - don't emit on GET requests
+        // const io = req.app.get('io');
+        // io.emit('', posts);
 
         return res.status(200).json({ posts: postsWithLikesCount });
         
@@ -51,16 +61,20 @@ exports.get_posts = asyncHandler(async (req, res, next) => {
         console.error('Error fetching posts:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
-})
+});
 
 exports.delete_post = asyncHandler(async (req, res, next) => {
     const postId = req.params.postId;
 
     const deletedPost = await Post.findByIdAndDelete(postId);
-
+    
     if (!deletedPost) {
         return res.status(404).json({ message: 'Post not found'});
     }
+
+    const io = req.app.get('io');
+    io.emit('post_deleted', postId);
+
     res.json({ message: 'Post deleted successfully' });
 });
 
@@ -76,23 +90,39 @@ exports.update_likes = asyncHandler(async (req, res, next) => {
         
         const likedPost = post.likes.some(like => like.user_id.equals(userId));
 
+        let updatedPost; // Declare the variable
+
         if (!likedPost) {
-            await Post.findByIdAndUpdate(
+            updatedPost = await Post.findByIdAndUpdate( // Store the result
                 postId,
                 { $addToSet: { likes: { user_id: userId } } },
                 { new: true } // Return the updated document
             );
             console.log('User has liked the post');
-            // Handle the case where the user has already liked the post
+
+            const postObject = updatedPost.toObject();
+            postObject.likesCount = updatedPost.likes.length;
+            postObject.isOwner = updatedPost.user_id.toString() === userId;
+
+            const io = req.app.get('io');
+            io.emit('post_updated', postObject);
+
             res.status(200).json({ liked: true, message: 'Like added successfully' });
         } else {
-            await Post.findByIdAndUpdate(
+            updatedPost = await Post.findByIdAndUpdate( // Store the result
                 postId,
                 { $pull: { likes: { user_id: userId } } },
                 { new: true } 
             );
             console.log('User has unliked the post');
-            // Handle the case where the user has not liked the post
+
+            const postObject = updatedPost.toObject();
+            postObject.likesCount = updatedPost.likes.length;
+            postObject.isOwner = updatedPost.user_id.toString() === userId;
+
+            const io = req.app.get('io');
+            io.emit('post_updated', postObject);
+            
             res.status(200).json({ liked: false, message: 'Like removed successfully' });
         }
     } catch (error) {
@@ -106,22 +136,26 @@ exports.create_comment = asyncHandler(async (req, res, next) => {
     const postId = req.params.postId;
     const userId = req.user.sub;
     const comment = req.body.commentText;
-    // console.log('USER Id ->', userId);
-    // console.log('POST Id ->', postId);
-    // console.log('COMMENT ->', comment);
     
     try {
         const post = await Post.findOne({_id: postId});
 
         if (!post) return res.status(404).json({ message: 'Post not found'});
 
-        const commentPost = await Post.findByIdAndUpdate(postId,
+        const updatedPost = await Post.findByIdAndUpdate(postId, // Changed variable name
             { $addToSet: { comments: { user_id: userId, content: comment} } },
             { new: true } 
         );
 
-        if (commentPost) {
-            console.log(commentPost);
+        if (updatedPost) {
+            // Add Socket.IO emit
+            const postObject = updatedPost.toObject();
+            postObject.likesCount = updatedPost.likes.length;
+            postObject.isOwner = updatedPost.user_id.toString() === userId;
+
+            const io = req.app.get('io');
+            io.emit('post_updated', postObject);
+
             res.status(200).json({ commentPost: true, userId, message: 'Comment added successfully' });
         } 
 
@@ -135,9 +169,6 @@ exports.delete_comment = asyncHandler(async (req, res, next) => {
     const postId = req.params.postId;
     const userId = req.user.sub;
     const commentId = req.params.commentId;
-    // console.log('USER Id ->', userId);
-    // console.log('POST Id ->', postId);
-    // console.log('COMMENT ->', commentId);
 
     try {
         const post = await Post.findOne({_id: postId});
@@ -151,7 +182,16 @@ exports.delete_comment = asyncHandler(async (req, res, next) => {
 
         if (userId === commentUserId) {
             post.comments.pull(commentId);
-            await post.save();
+            const updatedPost = await post.save(); // Store the result
+
+            // Add Socket.IO emit
+            const postObject = updatedPost.toObject();
+            postObject.likesCount = updatedPost.likes.length;
+            postObject.isOwner = updatedPost.user_id.toString() === userId;
+
+            const io = req.app.get('io');
+            io.emit('post_updated', postObject);
+
             res.status(200).json({ message: 'Comment removed successfully' });
         } else {
             res.status(403).json({ message: 'You are not authorized to delete this comment' });
@@ -160,29 +200,4 @@ exports.delete_comment = asyncHandler(async (req, res, next) => {
         console.error('Error deleting comment:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
-});
-
-exports.update_comment = asyncHandler(async (req, res, next) => {
-    // const postId = req.params.postId;
-    // const userId = req.user.sub;
-    // const commentId = req.params.commentId;
-    // // console.log('USER Id ->', userId);
-    // // console.log('POST Id ->', postId);
-    // // console.log('COMMENT ->', commentId);
-
-    // try {
-    //     const post = await Post.findOne({_id: postId});
-    //     const comment = post.comments.some(comment => comment._id.equals(commentId));
-
-    //     if (!post) return res.status(404).json({ message: 'Post not found'});
-    //     if (!comment) return res.status(404).json({ message: 'Comment not found' });
-
-    //     post.comments.pull(commentId);
-    //     await post.save();
-
-    //     res.status(200).json({ message: 'Comment removed successfully' });
-    // } catch (error) {
-    //     console.error('Error updating comment:', error);
-    //     res.status(500).json({ error: 'Internal Server Error' });
-    // }
 });
