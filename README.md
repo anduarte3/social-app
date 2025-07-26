@@ -15,6 +15,7 @@ This is a full-stack web application that enables users to connect in a social n
 - **Backend**: Node.js, Express.js
 - **Database**: MongoDB
 - **Authentication**: Passport.js with JWT
+- **Realtime**: Socket.io
 
 ---
 
