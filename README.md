@@ -19,6 +19,5 @@ This is a full-stack web application that enables users to connect in a social n
 
 ---
 
-<img width="1226" height="1232" alt="Sem Título" src="https://github.com/user-attachments/assets/644151bb-3de3-4545-ba68-3f2d5526c5ca" />
-
+<img width="1201" height="1282" alt="image" src="https://github.com/user-attachments/assets/306f94e9-9662-4c0c-b988-19f1b4577342" />
 
