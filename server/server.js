@@ -14,13 +14,16 @@ const { createServer } = require('node:http');
 const { join } = require('node:path');
 const { Server } = require("socket.io");
 const PORT = process.env.PORT || 3001;
+
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
 main().catch((err) => console.log(err));
+
 async function main() {
-await mongoose.connect(process.env.MONGODB_URL);
-console.log('Connected');
+  await mongoose.connect(process.env.MONGODB_URL);
+  console.log('Connected');
 }
+
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const app = express();
@@ -50,7 +53,6 @@ next();
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
-// MOVE THESE BEFORE THE SERVER SETUP:
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
 next(createError(404));
@@ -63,36 +65,24 @@ error: req.app.get('env') === 'development' ? err.stack : {}
  });
 });
 
-
-
 // Socket.io
 const server = createServer(app);
 const io = new Server(server, {
-<<<<<<< HEAD
-cors: {
-  origin: process.env.NODE_ENV === 'production'
-    ? process.env.FRONTEND_URL
-    : "http://localhost:3000",
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true
-=======
   cors: {
-    origin: process.env.NODE_ENV === 'production' 
+    origin: process.env.NODE_ENV === 'production'
       ? process.env.FRONTEND_URL
       : "http://localhost:3000",
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true
->>>>>>> dev
   }
 });
 
 app.set("io", io);
 io.on('connection', (socket) => {
-console.log('New client connected:', socket.id);
-socket.on('disconnect', () => {
-console.log('Client disconnected:', socket.id);
- });
+  socket.on('disconnect', () => {
+  });
 });
+
 // Start the server
 server.listen(PORT, () => {
 console.log(`Server is listening at http://localhost:${PORT}`);
