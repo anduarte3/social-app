@@ -65,6 +65,8 @@ error: req.app.get('env') === 'development' ? err.stack : {}
  });
 });
 
+console.log(process.env.FRONTEND_URL);
+
 // Socket.io
 const server = createServer(app);
 const io = new Server(server, {

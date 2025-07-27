@@ -23,8 +23,4 @@ function DeleteComment({ postId, commentId, isOwner, onCommentDeleted }) {
     );
 }
 
-<<<<<<< HEAD
 export default DeleteComment;
-=======
-export default DeleteComment;
->>>>>>> dev
