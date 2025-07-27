@@ -71,9 +71,9 @@ const Register = () => {
                     transform scale-100'>Create your account!</div>
                     <div className='register-container'>
                         <form onSubmit={handleSubmit}>
-                            <div className="flex px-4 pb-2 pt-14">
+                            <div className="flex px-4 pb-2 pt-10">
                                 {/* Username Input */}
-                                <img src={profile} className='w-8 h-8'></img>
+                                <img src={profile} className='w-12 h-12'></img>
                                 <div className='flex hover-pb-8 ml-2'>
                                     <label></label>
                                         <input 
@@ -82,14 +82,14 @@ const Register = () => {
                                             placeholder='Username'
                                             value={formData.username}
                                             onChange={handleChange}
-                                            className='placeholder-white bg-black border-transparent transition focus:outline-none hover:translate-x-3 delay-150 focus:border-b-2'
+                                            className='w-40 px-4 py-2 text-gray-800 placeholder-gray-400 bg-white border border-gray-300 rounded-xl shadow-sm transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
                                             required
                                         />
                                 </div>
                             </div>
-                            <div className="flex px-4 pb-2 pt-14">
+                            <div className="flex px-4 pb-2 pt-10">
                                 {/* Email Input */}
-                                <img src={mail} className='w-8 h-8'></img>
+                                <img src={mail} className='w-12 h-12'></img>
                                 <div className='flex hover-pb-8 ml-2'>
                                     <label></label>
                                     <input 
@@ -98,14 +98,14 @@ const Register = () => {
                                         placeholder='Email'
                                         value={formData.email}
                                         onChange={handleChange}
-                                        className='placeholder-white bg-black border-transparent transition focus:outline-none hover:translate-x-3 delay-150 focus:border-b-2'
+                                        className='w-40 px-4 py-2 text-gray-800 placeholder-gray-400 bg-white border border-gray-300 rounded-xl shadow-sm transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
                                         required
                                     />
                                 </div>
                             </div>
-                            <div className="flex px-4 pb-2 pt-14">
+                            <div className="flex px-4 pb-2 pt-10">
                                 {/* Password Input */}
-                                <img src={padlock} className='w-8 h-8'></img>
+                                <img src={padlock} className='w-12 h-12'></img>
                                 <div className='flex hover-pb-8 ml-2'>
                                     <label></label>
                                     <input 
@@ -114,23 +114,23 @@ const Register = () => {
                                         placeholder='Password'
                                         value={formData.password}
                                         onChange={handleChange}
-                                        className='placeholder-white bg-black border-transparent transition focus:outline-none hover:translate-x-3 delay-150 focus:border-b-2'
+                                        className='w-40 px-4 py-2 text-gray-800 placeholder-gray-400 bg-white border border-gray-300 rounded-xl shadow-sm transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
                                         required
                                     />
                                 </div>
                             </div>
-                            <div className="flex px-4 pb-2 pt-14">
+                            <div className="flex px-4 pb-2 pt-10">
                                 {/* Confirm Password Input */}
-                                <img src={padlock} className='w-8 h-8'></img>
+                                <img src={padlock} className='w-12 h-12'></img>
                                 <div className='flex hover-pb-8 ml-2'>
                                     <label></label>
                                     <input 
                                         type="password" 
                                         name='confirmPassword' 
-                                        placeholder='Confirm Password'
+                                        placeholder='Password'
                                         value={formData.confirmPassword}
                                         onChange={handleChange}
-                                        className='placeholder-white bg-black border-transparent transition focus:outline-none hover:translate-x-3 delay-150 focus:border-b-2'
+                                        className='w-40 px-4 py-2 text-gray-800 placeholder-gray-400 bg-white border border-gray-300 rounded-xl shadow-sm transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
                                         required
                                     />
                                 </div>
@@ -139,7 +139,7 @@ const Register = () => {
                         </form>
                         {message && <div>{message}</div>}
                         {errorMsg && <p className="text-red-500 py-5">{errorMsg}</p>}
-                        <p className='mt-3'>Already have an account? <Link to='/' className='font-bold text-blue-500'> Sign In</Link></p>
+                        <p className='mt-4 text-black'> Already have an account?<Link to='/' className='font-bold text-blue-500'>  Sign In</Link></p>
                     </div>
                 </div>
             </div>

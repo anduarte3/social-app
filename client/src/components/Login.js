@@ -59,7 +59,7 @@ const Login = () => {
                         <form onSubmit={handleSubmit}>
                             <div className="flex px-4 pb-2 pt-14">
                                 {/* Username Input */}
-                                <img src={profile} className='w-8 h-8'></img>
+                                <img src={profile} className='w-12 h-12'></img>
                                 <div className='flex hover-pb-8 ml-2'>
                                     <label></label>
                                     <input 
@@ -68,14 +68,14 @@ const Login = () => {
                                         placeholder='Username'
                                         value={loginData.username}
                                         onChange={handleChange}
-                                        className='placeholder-white bg-black border-transparent transition focus:outline-none hover:translate-x-3 delay-150 focus:border-b-2'
+                                        className='w-40 px-4 py-2 text-gray-800 placeholder-gray-400 bg-white border border-gray-300 rounded-xl shadow-sm transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
                                         required
                                     />
                                 </div>
                             </div>
-                            <div className="flex px-4 pb-14">
+                            <div className="flex px-4 pb-12">
                                 {/* Password Input */}
-                                <img src={padlock} className='w-8 h-8'></img>
+                                <img src={padlock} className='w-12 h-12'></img>
                                 <div className='flex hover-pb-8 ml-2'>
                                     <label></label>
                                     <input 
@@ -84,7 +84,7 @@ const Login = () => {
                                         placeholder='Password'
                                         value={loginData.password}
                                         onChange={handleChange}
-                                        className='placeholder-white bg-black border-transparent transition focus:outline-none hover:translate-x-3 delay-150 focus:border-b-2'
+                                        className='w-40 px-4 py-2 text-gray-800 placeholder-gray-400 bg-white border border-gray-300 rounded-xl shadow-sm transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
                                         required
                                     />
                                 </div>
