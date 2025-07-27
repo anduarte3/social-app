@@ -17,8 +17,7 @@ function DeletePost({ post }) {
     };
 
     return (
-        <div className='flex flex-row place-content-between'>
-            <div className='font-bold text-sm'>{post.formattedTimestamp}</div>
+        <div>
             {post.isOwner && (
                 <div>
                     <button 

@@ -20,13 +20,12 @@ exports.create_post = asyncHandler(async (req, res, next) => {
         await newPost.save();
 
         const postObject = newPost.toObject();
-        postObject.likesCount = newPost.likes.length; // Add this line
         postObject.isOwner = newPost.user_id.toString() === req.user.sub;
 
         const io = req.app.get('io');
         io.emit('new_post', postObject);
         
-        return res.status(200).json({ post: postObject }); // Changed to postObject
+        return res.status(200).json({ post: postObject });
     } else {
         return res.status(404).json({ message: 'User not found' });
     }
@@ -39,21 +38,17 @@ exports.get_posts = asyncHandler(async (req, res, next) => {
 
         const postsWithLikesCount = await Promise.all(posts.map(async post => {
             const postObject = post.toObject();
-            const likesCount = post.likes.length;
+            const user = await User.findById(post.user_id);
 
-            // const user = await User.findById(post.user_id);
-            // postObject.username = user ? user.username : null;
+            postObject.liked = post.likes.some(like => like.user_id.equals(userId));
+            postObject.username = user ? user.username : null;
             
-            postObject.likesCount = likesCount;
             // Determine if the current user is the owner of the post
             postObject.isOwner = post.user_id.toString() === userId;
             
+
             return postObject;
         }));
-
-        // Remove this line - don't emit on GET requests
-        // const io = req.app.get('io');
-        // io.emit('', posts);
 
         return res.status(200).json({ posts: postsWithLikesCount });
         
@@ -85,23 +80,19 @@ exports.update_likes = asyncHandler(async (req, res, next) => {
 
     try {
         const post = await Post.findOne({_id: postId});
-        
+        const likedPost = post.likes.some(like => like.user_id.equals(userId));
+        let updatedPost;
+
         if (!post) return res.status(404).json({ message: 'Post not found' });
         
-        const likedPost = post.likes.some(like => like.user_id.equals(userId));
-
-        let updatedPost; // Declare the variable
-
         if (!likedPost) {
-            updatedPost = await Post.findByIdAndUpdate( // Store the result
+            updatedPost = await Post.findByIdAndUpdate(
                 postId,
                 { $addToSet: { likes: { user_id: userId } } },
-                { new: true } // Return the updated document
+                { new: true }
             );
-            console.log('User has liked the post');
 
             const postObject = updatedPost.toObject();
-            postObject.likesCount = updatedPost.likes.length;
             postObject.isOwner = updatedPost.user_id.toString() === userId;
 
             const io = req.app.get('io');
@@ -109,15 +100,13 @@ exports.update_likes = asyncHandler(async (req, res, next) => {
 
             res.status(200).json({ liked: true, message: 'Like added successfully' });
         } else {
-            updatedPost = await Post.findByIdAndUpdate( // Store the result
+            updatedPost = await Post.findByIdAndUpdate(
                 postId,
                 { $pull: { likes: { user_id: userId } } },
                 { new: true } 
             );
-            console.log('User has unliked the post');
 
             const postObject = updatedPost.toObject();
-            postObject.likesCount = updatedPost.likes.length;
             postObject.isOwner = updatedPost.user_id.toString() === userId;
 
             const io = req.app.get('io');
@@ -142,15 +131,13 @@ exports.create_comment = asyncHandler(async (req, res, next) => {
 
         if (!post) return res.status(404).json({ message: 'Post not found'});
 
-        const updatedPost = await Post.findByIdAndUpdate(postId, // Changed variable name
+        const updatedPost = await Post.findByIdAndUpdate(postId,
             { $addToSet: { comments: { user_id: userId, content: comment} } },
             { new: true } 
         );
 
         if (updatedPost) {
-            // Add Socket.IO emit
             const postObject = updatedPost.toObject();
-            postObject.likesCount = updatedPost.likes.length;
             postObject.isOwner = updatedPost.user_id.toString() === userId;
 
             const io = req.app.get('io');
@@ -160,7 +147,6 @@ exports.create_comment = asyncHandler(async (req, res, next) => {
         } 
 
     } catch (error) {
-        console.error('Error updating comment:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
@@ -177,7 +163,6 @@ exports.delete_comment = asyncHandler(async (req, res, next) => {
         if (!post) return res.status(404).json({ message: 'Post not found'});
         if (!comment) return res.status(404).json({ message: 'Comment not found' });
 
-        // Convert the comment's user_id to a string for comparison
         const commentUserId = comment.user_id.toString();
 
         if (userId === commentUserId) {
@@ -197,7 +182,6 @@ exports.delete_comment = asyncHandler(async (req, res, next) => {
             res.status(403).json({ message: 'You are not authorized to delete this comment' });
         }
     } catch (error) {
-        console.error('Error deleting comment:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
