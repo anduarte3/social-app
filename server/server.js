@@ -65,8 +65,6 @@ error: req.app.get('env') === 'development' ? err.stack : {}
  });
 });
 
-console.log(process.env.FRONTEND_URL);
-
 // Socket.io
 const server = createServer(app);
 const io = new Server(server, {
@@ -87,7 +85,7 @@ io.on('connection', (socket) => {
 
 // Start the server
 server.listen(PORT, () => {
-console.log(`Server is listening at http://localhost:${PORT}`);
+console.log(`Server is listening at ${process.env.FRONTEND_URL}`);
 });
 
 module.exports = app;
