@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import comment from '../assets/comment.png';
 import AddCommentAPI from "../api/AddCommentAPI";
 

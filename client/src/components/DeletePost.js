@@ -10,15 +10,13 @@ function DeletePost({ post }) {
         try {
             await DeletePostAPI(post._id);
             setShowModal(false);
-            // You might want to add state update here to reflect the deletion in UI
         } catch (error) {
             console.error("Failed to delete post:", error);
         }
     };
 
     return (
-        <div className='flex flex-row place-content-between'>
-            <div className='font-bold text-sm'>{post.formattedTimestamp}</div>
+        <div>
             {post.isOwner && (
                 <div>
                     <button 

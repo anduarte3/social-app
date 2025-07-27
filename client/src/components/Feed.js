@@ -7,7 +7,7 @@ import GetPosts from '../api/GetPosts'
 
 const Feed = () => {
     const location = useLocation();
-    const [userId, setUserId] = useState(null); // State to store the user ID
+    const [userId, setUserId] = useState(null);
     const username = location.state && location.state.username;
 
     TokenCheck();

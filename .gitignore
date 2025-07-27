@@ -11,7 +11,11 @@ node_modules
 
 # production
 /build
+<<<<<<< HEAD
 /client/build
+=======
+/client/build/
+>>>>>>> dev
 
 # misc
 .DS_Store

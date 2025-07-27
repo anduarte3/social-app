@@ -1,6 +1,5 @@
 
 async function LikePostAPI(postId) {
-
     try {
         const token = localStorage.getItem('token');
         // ${process.env.REACT_APP_LOCAL_URL} or ${process.env.REACT_APP_BACKEND_URL}
@@ -12,10 +11,8 @@ async function LikePostAPI(postId) {
                 'Authorization': `Bearer ${token}`
             },
         });
-
-        if (response.ok) {
-            console.log("liked");
-        }
+        return await response.json();
+        
     } catch (error) {
         console.error('Error updating likes:', error.message);
     }

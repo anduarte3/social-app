@@ -9,7 +9,7 @@ function GetPosts() {
         try {
             const token = localStorage.getItem('token');
             // ${process.env.REACT_APP_LOCAL_URL} or ${process.env.REACT_APP_BACKEND_URL}
-            const response = await fetch(`${process.env.REACT_APP_LOCAL_URL}/api/feedload`, {
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/feedload`, {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
@@ -31,20 +31,16 @@ function GetPosts() {
 
     useEffect(() => {
         fetchPosts();
-        
-        console.log(socket);
-        
+                
         socket.on('new_post', (newPost) => {
             setPostData(prevPosts => [newPost, ...prevPosts]);
         });
 
         socket.on('post_deleted', (postId) => {
-            console.log('Post deleted:', postId);
             setPostData(prevPosts => prevPosts.filter(post => post._id !== postId));
         });
 
         socket.on('post_updated', (updatedPost) => {
-            console.log('Post updated:', updatedPost);
             setPostData(prevPosts => 
             prevPosts.map(post => 
                 post._id === updatedPost._id ? updatedPost : post

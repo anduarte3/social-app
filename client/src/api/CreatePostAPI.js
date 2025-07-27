@@ -16,7 +16,6 @@ async function CreatePostAPI(postText) {
 
         if (response.ok) {
             const responseData = await response.json();
-            //await fetchPosts();
         } else {
             const errorData = await response.json();
         }

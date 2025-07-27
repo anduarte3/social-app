@@ -68,12 +68,21 @@ error: req.app.get('env') === 'development' ? err.stack : {}
 // Socket.io
 const server = createServer(app);
 const io = new Server(server, {
+<<<<<<< HEAD
 cors: {
   origin: process.env.NODE_ENV === 'production'
     ? process.env.FRONTEND_URL
     : "http://localhost:3000",
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
+=======
+  cors: {
+    origin: process.env.NODE_ENV === 'production' 
+      ? process.env.FRONTEND_URL
+      : "http://localhost:3000",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true
+>>>>>>> dev
   }
 });
 
