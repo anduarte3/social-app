@@ -33,9 +33,7 @@ app.set('view engine', 'ejs');
 app.use(logger('dev'));
 app.use(express.urlencoded({ extended: false }));
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production'
-    ? process.env.FRONTEND_URL
-    : "http://localhost:3000", 
+  origin: "https://social-app-al2jczf7hr.netlify.app", 
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
 }));
@@ -69,9 +67,7 @@ error: req.app.get('env') === 'development' ? err.stack : {}
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: process.env.NODE_ENV === 'production'
-      ? process.env.FRONTEND_URL
-      : "http://localhost:3000",
+    origin: "https://social-app-al2jczf7hr.netlify.app",
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true
   }
@@ -85,7 +81,7 @@ io.on('connection', (socket) => {
 
 // Start the server
 server.listen(PORT, () => {
-console.log(`Server is listening at ${process.env.FRONTEND_URL}`);
+console.log(`Server is listening at ${PORT}`);
 });
 
 module.exports = app;
