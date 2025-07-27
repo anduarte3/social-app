@@ -6,7 +6,6 @@ import mail from '../assets/email.png'
 
 const Register = () => {
     const navigate = useNavigate();
-    //Define the default useState values
     const [message, setMessage] = useState('')
     const [errorMsg, setErrorMsg] = useState('');
     const [formData, setFormData] = useState({
@@ -28,11 +27,10 @@ const Register = () => {
 
         try {
             // ${process.env.REACT_APP_LOCAL_URL} or ${process.env.REACT_APP_BACKEND_URL}
-            const response = await fetch(`${process.env.REACT_APP_LOCAL_URL}/api/register`, {
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/register`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
-                    // like authentication token
                 },
                 body: JSON.stringify({ formData }),
             });

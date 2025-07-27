@@ -27,10 +27,10 @@ function RenderPosts({postData}) {
                         {post.comments.map((comment) => (
                             <div key={comment._id}>
                             <div className='m-1 p-1'></div>
-                            <DeleteComment 
+                            {/* <DeleteComment 
                                 postId={post._id} 
                                 commentId={comment._id} 
-                            />
+                            /> */}
                             <p>{comment.content}</p>
                             </div>
                         ))}

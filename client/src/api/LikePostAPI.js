@@ -3,7 +3,7 @@ async function LikePostAPI(postId) {
     try {
         const token = localStorage.getItem('token');
         // ${process.env.REACT_APP_LOCAL_URL} or ${process.env.REACT_APP_BACKEND_URL}
-        const response = await fetch(`${process.env.REACT_APP_LOCAL_URL}/api/post/${postId}/like`, {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/post/${postId}/like`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -11,6 +11,7 @@ async function LikePostAPI(postId) {
             },
         });
         return await response.json();
+        
     } catch (error) {
         console.error('Error updating likes:', error.message);
     }

@@ -6,7 +6,7 @@ function TokenCheck() {
 
     useEffect(() => {
         checkTokenStatus();
-        const intervalId = setInterval(checkTokenStatus, 60000); // 60000 milliseconds = 1 minute
+        const intervalId = setInterval(checkTokenStatus, 60000);
         return () => clearInterval(intervalId);
     }, [navigate]);
 
