@@ -1,6 +1,7 @@
 import DeletePost from '../components/DeletePost';
 import LikePost from '../components/LikePost';
 import Comment from '../components/Comment';
+import DeleteComment from '../components/DeleteComment';
 
 function RenderPosts({postData}) {
     
@@ -15,7 +16,6 @@ function RenderPosts({postData}) {
                         <div className=''>{post.username}</div>
                     </div>
                 </div>
-                    
                     <DeletePost post={post} postTime={post.formattedTimestamp} postOwner={post.isOwner} postId={post._id}/>
                 </div>
                     <div className='text-4xl py-2 px-5 mr-10 mt-5 mb-5'>{post.content}</div>
@@ -26,12 +26,15 @@ function RenderPosts({postData}) {
                     <div>
                         {post.comments.map((comment) => (
                             <div key={comment._id}>
-                                <div  className='m-1 p-1'></div>
-                                <p>{comment.content}</p>
+                            <div className='m-1 p-1'></div>
+                            <DeleteComment 
+                                postId={post._id} 
+                                commentId={comment._id} 
+                            />
+                            <p>{comment.content}</p>
                             </div>
                         ))}
                     </div>
-                    {/* <CreateComment/> */}
                 </div>
             ))}
         </div>

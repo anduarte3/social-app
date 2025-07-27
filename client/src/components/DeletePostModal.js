@@ -4,7 +4,6 @@ function DeletePostModal({ onConfirm, onCancel }) {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="relative w-full max-w-md px-5 mx-4">
                 <div className="relative bg-white p-8 shadow-2xl ring-1 ring-gray-900/5 rounded-xl border-2 border-gray-400">
-                    {/* Gradient Title - Matching your welcome screen */}
                     <div className="font-extrabold text-2xl leading-tight text-transparent bg-clip-text bg-gradient-to-r from-teal-600 via-sky-400 to-cyan-500 mb-6">
                         <h2>Confirm Deletion</h2>
                     </div>
@@ -30,7 +29,3 @@ function DeletePostModal({ onConfirm, onCancel }) {
 }
 
 export default DeletePostModal;
-
-// ""
-
-

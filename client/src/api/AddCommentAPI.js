@@ -1,7 +1,5 @@
 
-async function AddCommentAPI(postId, commentText) {
-    console.log(commentText);
-    
+async function AddCommentAPI(postId, commentText) {    
     try {
         const token = localStorage.getItem('token');
 
