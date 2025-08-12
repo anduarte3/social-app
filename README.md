@@ -20,9 +20,11 @@ This is a full-stack web application that enables users to connect in a social n
 ---
 <div align="center">
   <img width="1000" height="1000" alt="image" src="https://github.com/user-attachments/assets/306f94e9-9662-4c0c-b988-19f1b4577342" />
-  <img width="1000" height="1000" alt="image" src="https://github.com/user-attachments/assets/e07784ab-33cb-4824-a449-4cf9030b8a0f" />
-<img width="1000" height="1000" alt="image" src="https://github.com/user-attachments/assets/c599b2eb-e337-428d-906b-f88b88d084a0" />
+  <img width="1000" height="1000" alt="image" src="https://github.com/user-attachments/assets/3cd74ab1-59eb-4a70-a004-dbd47231bd81" />
+  <img width="1000" height="1000" alt="image" src="https://github.com/user-attachments/assets/59c64a45-22a4-4a3c-92b4-ae53ac176311" />
 </div>
+
+
 
 
 
